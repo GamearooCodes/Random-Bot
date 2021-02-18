@@ -1,2 +1,1 @@
-# Randome Bot
- 
+# Random Bot
