@@ -4,3 +4,4 @@ config.yaml
 __pycache__
 sqltools_20210218025045_38496.log
 database.db
+*.zip
