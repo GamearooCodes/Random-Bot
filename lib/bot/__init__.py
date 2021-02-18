@@ -31,6 +31,7 @@ class Bot(BotBase):
         self.guild = None
         self.SUP = None
         self.scheduler = AsyncIOScheduler()
+        self.config = config
 
         intents = Intents.default()
         intents.members = True
