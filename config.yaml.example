@@ -1,6 +1,6 @@
 token: token here
 prefix: "prefix here"
 support-server: support server here
-startchannel: start channel here
+botlog: start channel here
 ownerids: [owner ids here separated by commas]
 timezone: "Timezone here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)"

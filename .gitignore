@@ -3,5 +3,6 @@ start.bat
 config.yaml
 __pycache__
 sqltools_20210218025045_38496.log
-database.db
+*.db
 *.zip
+data/db/database.db-journal
