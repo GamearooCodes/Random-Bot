@@ -31,6 +31,7 @@ class Ready(object):
     def __init__(self):
         for cog in COGS:
             setattr(self, cog, False)
+            print(f'Loading {cog}...')
 
     def ready_up(self, cog):
         setattr(self, cog, True)

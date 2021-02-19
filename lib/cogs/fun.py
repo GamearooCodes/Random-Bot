@@ -3,6 +3,7 @@ from discord.ext.commands import command
 from discord import Member, Embed
 from typing import Optional
 from random import choice, randint
+from aiohttp import request
 
 
 class Fun(Cog):
@@ -36,6 +37,47 @@ class Fun(Cog):
         embed.set_image(url=f'{image}')
 
         await ctx.channel.send(embed=embed)
+
+    @command(name='dog')
+    async def dog_image(self, ctx):
+        URL = 'https://some-random-api.ml/img/dog'
+        async with request('GET', URL, headers={}) as response:
+            if response.status == 200:
+                image = await response.json()
+
+                embed = Embed(
+                    description=f'Heres a random Dog {ctx.author.mention}',
+                    color=0x00B9F9,
+                    timestamp=self.bot.time
+                )
+                embed.set_author(
+                    name=f"{ctx.author.display_name}#{ctx.author.discriminator}", icon_url=f"{ctx.author.avatar_url}")
+                embed.set_image(url=f'{image["link"]}')
+
+                await ctx.channel.send(embed=embed)
+
+            else:
+                await ctx.send(f'The api i use returned a {response.status} Status. :(')
+
+    @command(name='dogfact')
+    async def dog_fact(self, ctx):
+        URL2 = 'https://some-random-api.ml/facts/dog'
+        async with request('GET', URL2, headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+
+                embed = Embed(
+                    description=f'{data["fact"]}',
+                    color=0x00B9F9,
+                    timestamp=self.bot.time
+                )
+                embed.set_author(
+                    name=f"{ctx.author.display_name}#{ctx.author.discriminator}", icon_url=f"{ctx.author.avatar_url}")
+
+                await ctx.channel.send(embed=embed)
+
+            else:
+                await ctx.send(f'The api i use returned a {response.status} Status. :(')
 
     @Cog.listener()
     async def on_ready(self):
