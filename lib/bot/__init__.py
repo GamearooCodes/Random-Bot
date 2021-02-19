@@ -130,7 +130,10 @@ class Bot(BotBase):
             await channel.send("I have Reconnected!")
 
     async def on_message(self, message):
-        pass
+        if not message.author.bot:
+            now_utc = datetime.now(timezone('UTC'))
+            self.time = now_utc.astimezone(timezone(config['timezone']))
+            await self.process_commands(message)
 
 
 bot = Bot()
