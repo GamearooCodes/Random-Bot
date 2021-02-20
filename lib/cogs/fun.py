@@ -26,7 +26,7 @@ class Fun(Cog):
 
     @command(name='slap', aliases=['hit'])
     @cooldown(2, 60, BucketType.user)
-    async def slapping(self, ctx, member: Member, *, reason: str = "For No Reason"):
+    async def slapping(self, ctx, member: Member, *, reason: Optional[str] = "For No Reason"):
         if not member:
             ctx.send('Please Metion A Member!')
 

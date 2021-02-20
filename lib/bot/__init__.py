@@ -82,6 +82,7 @@ class Bot(BotBase):
         super().run(self.TOKEN, reconnect=True)
 
     async def on_connect(self):
+
         print("Bot connected!")
 
     async def on_disconnect(self):
@@ -101,7 +102,7 @@ class Bot(BotBase):
             await ctx.send(f'That command is on {str(exc.cooldown.type).split(".")[-1]} Cooldown. Try again in {exc.retry_after:,.2f} secs.')
 
         elif isinstance(exc, MissingRequiredArgument):
-            if exc == 'member is a required argument that is missing.':
+            if (exc := 'member is a required argument that is missing.'):
                 await ctx.send(f'You are Missing Required infomation! !<command> <member>')
 
             else:
