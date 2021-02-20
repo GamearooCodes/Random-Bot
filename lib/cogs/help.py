@@ -11,7 +11,7 @@ with open(r"./config.yaml") as file:
     config = yaml.load(file, yaml.SafeLoader)
 
 
-def syntax(command):
+def syntax(prefix, command):
     cmd_and_aliases = "|".join([str(command), *command.aliases])
     params = []
 
@@ -22,12 +22,13 @@ def syntax(command):
 
     params = " ".join(params)
 
-    return f"```{config['prefix']}{cmd_and_aliases} {params}```"
+    return f"```{prefix}{cmd_and_aliases} {params}```"
 
 
 class HelpMenu(ListPageSource):
-    def __init__(self, ctx, data):
+    def __init__(self, prefix, ctx, data):
         self.ctx = ctx
+        self.prefix = prefix
 
         super().__init__(data, per_page=3)
 
@@ -53,7 +54,7 @@ class HelpMenu(ListPageSource):
 
         for entry in entries:
             fields.append(
-                (entry.brief or "No description", syntax(entry)))
+                (entry.brief or "No description", syntax(self.prefix, entry)))
 
         return await self.write_page(menu, fields)
 
@@ -66,7 +67,7 @@ class Help(Cog):
     async def cmd_help(self, ctx, command):
         embed = Embed(
             title=f'Help With `{command}`',
-            description=syntax(command),
+            description=syntax(self.bot.PREFIX, command),
             color=ctx.author.color,
             timestamp=self.bot.time
         )
@@ -76,7 +77,7 @@ class Help(Cog):
     @command(name='help', help='Help Command!')
     async def show_help(self, ctx, cmd: Optional[str]):
         if cmd is None:
-            menu = MenuPages(source=HelpMenu(ctx, list(self.bot.commands)),
+            menu = MenuPages(source=HelpMenu(self.bot.PREFIX, ctx, list(self.bot.commands)),
                              clear_reactions_after=True,
                              delete_message_after=False,
                              timeout=60.0)

@@ -12,7 +12,8 @@ from discord import Embed
 import yaml
 from datetime import datetime
 from pytz import timezone
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, when_mentioned_or
+
 
 now_utc = datetime.now(timezone('UTC'))
 
@@ -27,6 +28,17 @@ now_time = now_utc.astimezone(timezone(config['timezone']))
 PREFIX = config['prefix']
 OWNER_IDS = config['ownerids']
 COGS = [path.split("\\")[-1][:-3] for path in glob('./lib/cogs/*.py')]
+
+
+def get_prefix(bot, message):
+
+    prefix = db.field(
+        "SELECT prefix FROM Guilds WHERE guildId = ?", message.guild.id)
+    if not prefix:
+        prefix = db.execute(
+            f'INSERT INTO Guilds(Guilds) VALUES("{message.guild.id}", "{message.guild.name}", "{PREFIX}")')
+
+    return when_mentioned_or(prefix)(bot, message)
 
 
 class Ready(object):
@@ -48,7 +60,7 @@ class Ready(object):
 class Bot(BotBase):
     def __init__(self):
         # self definitions
-        self.PREFIX = PREFIX
+
         self.ready = False
         self.cogs_ready = Ready()
         self.guild = None
@@ -62,7 +74,7 @@ class Bot(BotBase):
         intents.members = True
 
         # *Start of main bot code
-        super().__init__(command_prefix=PREFIX, owner_ids=OWNER_IDS, intents=intents)
+        super().__init__(command_prefix=get_prefix, owner_ids=OWNER_IDS, intents=intents)
 
     def setup(self):
         for cog in COGS:
@@ -145,8 +157,13 @@ class Bot(BotBase):
 
     async def on_message(self, message):
         if not message.author.bot:
+            db.execute(
+                "UPDATE Guilds SET guildName = ? WHERE guildId = ?", message.guild.name, message.guild.id)
             now_utc = datetime.now(timezone('UTC'))
             self.time = now_utc.astimezone(timezone(config['timezone']))
+            prefix = db.field(
+                "SELECT prefix FROM Guilds WHERE guildId = ?", message.guild.id)
+            self.PREFIX = prefix
             await self.process_commands(message)
 
 
