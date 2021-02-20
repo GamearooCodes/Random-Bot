@@ -35,8 +35,10 @@ def get_prefix(bot, message):
     prefix = db.field(
         "SELECT prefix FROM Guilds WHERE guildId = ?", message.guild.id)
     if not prefix:
-        prefix = db.execute(
-            f'INSERT INTO Guilds(Guilds) VALUES("{message.guild.id}", "{message.guild.name}", "{PREFIX}")')
+        prefix = config['prefix']
+
+        db.execute(
+            'INSERT INTO Guilds (guildId, guildName, prefix) VALUES(?,?,?)', message.guild.id, message.guild.name, PREFIX)
 
     return when_mentioned_or(prefix)(bot, message)
 

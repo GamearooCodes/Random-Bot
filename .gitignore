@@ -6,3 +6,4 @@ sqltools_20210218025045_38496.log
 *.db
 *.zip
 data/db/database.db-journal
+cog.setuo.py.example
