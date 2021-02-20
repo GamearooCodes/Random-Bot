@@ -1,5 +1,5 @@
-from discord.ext.commands import Cog
-from discord.ext.commands import command
+from discord.ext.commands import Cog, BucketType
+from discord.ext.commands import command, cooldown
 from discord import Member, Embed
 from typing import Optional
 from random import choice, randint
@@ -11,11 +11,13 @@ class Fun(Cog):
         self.bot = bot
 
     @command(name="hello", aliases=['hi'])
+    @cooldown(1, 70, BucketType.user)
     async def hello(self, ctx):
         msg = choice(('Hello', 'Hello, How are you today?', 'Hi'))
         await ctx.channel.send(f"{msg} {ctx.author.mention}!")
 
     @command(name='dice')
+    @cooldown(2, 10, BucketType.guild)
     async def roll_dice(self, ctx, die_string: str):
         dice, value = (int(term) for term in die_string.split("d"))
         rolls = [randint(1, value) for i in range(dice)]
@@ -23,7 +25,11 @@ class Fun(Cog):
         await ctx.channel.send(" + ".join([str(r) for r in rolls]) + f" = {sum(rolls)}")
 
     @command(name='slap', aliases=['hit'])
+    @cooldown(2, 60, BucketType.user)
     async def slapping(self, ctx, member: Member, *, reason: str = "For No Reason"):
+        if not member:
+            ctx.send('Please Metion A Member!')
+
         image = choice(('https://gamearoo.top/wp-content/uploads/2020/04/slap.gif', 'https://gamearoo.top/wp-content/uploads/2020/04/slap2.gif',
                         'https://gamearoo.top/wp-content/uploads/2020/04/slap3.gif', 'https://gamearoo.top/wp-content/uploads/2020/04/slap4.gif'))
         embed = Embed(
@@ -39,6 +45,7 @@ class Fun(Cog):
         await ctx.channel.send(embed=embed)
 
     @command(name='dog')
+    @cooldown(1, 60, BucketType.user)
     async def dog_image(self, ctx):
         URL = 'https://some-random-api.ml/img/dog'
         async with request('GET', URL, headers={}) as response:
@@ -60,6 +67,7 @@ class Fun(Cog):
                 await ctx.send(f'The api i use returned a {response.status} Status. :(')
 
     @command(name='dogfact')
+    @cooldown(1, 60, BucketType.user)
     async def dog_fact(self, ctx):
         URL2 = 'https://some-random-api.ml/facts/dog'
         async with request('GET', URL2, headers={}) as response:

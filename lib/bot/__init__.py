@@ -1,6 +1,8 @@
 # modules
 from asyncio.tasks import sleep
 from glob import glob
+
+from discord.ext.commands.errors import CommandOnCooldown, MissingRequiredArgument
 from ..db import db
 from discord import Intents
 from discord.ext.commands import Bot as BotBase
@@ -94,6 +96,16 @@ class Bot(BotBase):
     async def on_command_error(self, ctx, exc):
         if isinstance(exc, CommandNotFound):
             pass
+
+        elif isinstance(exc, CommandOnCooldown):
+            await ctx.send(f'That command is on {str(exc.cooldown.type).split(".")[-1]} Cooldown. Try again in {exc.retry_after:,.2f} secs.')
+
+        elif isinstance(exc, MissingRequiredArgument):
+            if exc == 'member is a required argument that is missing.':
+                await ctx.send(f'You are Missing Required infomation! !<command> <member>')
+
+            else:
+                await ctx.send(f'You are Missing Required infomation!')
 
         elif hasattr(exc, "original"):
             raise exc.original
