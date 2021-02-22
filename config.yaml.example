@@ -7,3 +7,8 @@ timezone: "Timezone here (https://en.wikipedia.org/wiki/List_of_tz_database_time
 botname: 'Bot name here'
 welcome: 'welcome channel name here'
 bye: 'bye channel name here'
+os: 'windows or linux (mac not tested)'
+modlog: '<mod log name here!'
+support-server-modlogs: support server modlogs id here
+muterole: 'muted role name here'
+support-server-muterole: support server role id here

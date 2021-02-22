@@ -1,12 +1,13 @@
-CREATE TABLE IF NOT EXISTS exp (
-	UserID integer PRIMARY KEY,
-	Username text DEFAULT NULL,
-	XP integer DEFAULT 0,
-	Level integer DEFAULT 0,
-	XPLock text DEFAULT CURRENT_TIMESTAMP
-);
 CREATE TABLE IF NOT EXISTS Guilds (
     guildId VARCHAR(100) NOT NULL PRIMARY KEY,
     guildName VARCHAR(100) DEFAULT NULL,
 	prefix VARCHAR(10) DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS mutes (
+    UserID integer PRIMARY KEY,
+	Username text DEFAULT NULL,
+	RolesIDs text DEFAULT NULL,
+	EndTime text DEFAULT NULL,
+	muteroleid text DEFAULT NULL
 );

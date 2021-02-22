@@ -15,8 +15,6 @@ class Welcome(Cog):
 
     @Cog.listener()
     async def on_member_join(self, member):
-        db.execute(
-            'INSERT INTO exp(UserID, Username) VALUES (?, ?)', member.id, member.display_name)
 
         if not self.bot.config['welcome']:
             pass
